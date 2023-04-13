@@ -4,8 +4,13 @@ import { test, expect } from '@playwright/test';
 test.beforeEach(async ({ page }) => {
   await page.setViewportSize({ width: 1200, height: 900 });
   await page.goto('https://www.bbc.com/news');
-
-  await page.getByLabel(/^Consent$/).click();
+  
+  try {
+    await page.getByLabel(/^Consent$/).click();
+  } catch (e){
+    console.log (`=== No cookies message was shown ===`);
+  }
+  
 });
 
 test.describe('Task 1', () => {
