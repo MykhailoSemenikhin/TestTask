@@ -1,15 +1,18 @@
 import { test, expect } from '@playwright/test';
 
+
+test.beforeEach(async ({ page }) => {
+  await page.setViewportSize({ width: 1200, height: 900 });
+  await page.goto('https://www.bbc.com/news');
+
+  await page.getByLabel(/^Consent$/).click();
+});
+
 test.describe('Task 1', () => {
   const articlesForReview = 3;
 
   for ( let i = 1; i <= articlesForReview; i++) {
     test(`Check share information panel content for article ${i}`, async ({ page }) => {
-      await page.setViewportSize({ width: 1200, height: 1000 });
-      await page.goto('https://www.bbc.com/news');
-
-      await page.getByLabel(/^Consent$/).click();
-
       await page.getByRole('search').click();
       await expect(page).toHaveURL(/.*news_gnl/);
 
@@ -36,10 +39,6 @@ test.describe('Task 1', () => {
 
 test.describe('Task 2', () => {
   test(`Check video player exist`, async ({ page }) => {
-    await page.setViewportSize({ width: 1200, height: 900 });
-    await page.goto('https://www.bbc.com/news');
-    await page.getByLabel(/^Consent$/).click();
-
     await page.locator("li[class$='__wide-menuitem-container']>a[href^='/news/av/']").click();
 
     await expect(page.frameLocator("iframe[id *= 'bbcMediaPlayer']").locator('#mediaContainer>button')).toBeVisible({ timeout: 10000 });
